@@ -1,4 +1,4 @@
-import { BaseModal } from './modals/base-modal';
+import { StoreSelectModal, IStoreSelectModalHandlers } from './modals/store-select-modal';
 import * as blessed from 'blessed';
 import * as contrib from 'blessed-contrib';
 import * as colors from 'colors';
@@ -153,6 +153,10 @@ export class MainInterfaceBuilder implements UIBuilder<UITable, UIBox, UILog> {
 
   public createSearchModal(keys: string[], handlers: ISearchModalHandlers): void {
     this._screen.key(keys, () => new SearchModal(this._screen, handlers));
+  }
+
+  public createStoreSelectModal(keys: string[], handlers: IStoreSelectModalHandlers): void {
+    this._screen.key(keys, () => new StoreSelectModal(this._screen, handlers));
   }
 
 

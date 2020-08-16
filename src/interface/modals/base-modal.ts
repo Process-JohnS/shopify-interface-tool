@@ -6,6 +6,17 @@ export interface IBaseModalHandlers {
   closeHandler: (data: any) => void;
 }
 
+export type IElementPosition = {
+  top?: number,
+  right?: number,
+  bottom?: number,
+  left?: number,
+}
+export type IElementSize = {
+  width?: number|string,
+  height?: number
+}
+
 
 export class BaseModal {
 
@@ -18,12 +29,14 @@ export class BaseModal {
   /* Modal Dimensions */
 
   protected readonly defaultModalBoxHeight = 15;
-  protected modalBoxHeight = this.defaultModalBoxHeight;
+  protected readonly defaultModalBoxWidth = 50;
 
-  protected readonly modalBoxWidth = 50;
   protected readonly modalBoxPadding = 1;
 
-  protected readonly modalWidth = this.modalBoxWidth - this.modalBoxPadding * 2;
+  protected modalBoxHeight = this.defaultModalBoxHeight;
+  protected modalBoxWidth = this.defaultModalBoxWidth;
+
+  protected modalWidth = this.modalBoxWidth - this.modalBoxPadding * 2;
   protected modalHeight = this.modalBoxHeight - this.modalBoxPadding * 2;
   protected readonly modalVerticalPadding = 1;
   protected readonly modalHorizontalPadding = 2;
@@ -34,19 +47,25 @@ export class BaseModal {
     left: this.modalHorizontalPadding
   };
 
-  protected readonly modalContentWidth = this.modalWidth - (this.modalPadding.left + this.modalPadding.right);
+  protected modalContentWidth = this.modalWidth - (this.modalPadding.left + this.modalPadding.right);
 
 
   /* Button States */
 
-  protected readonly buttonColor = 'black';
-  protected readonly buttonBackground = 'cyan';
+  protected readonly buttonColor = 'white';
+  protected readonly buttonBackground = 'yellow';
 
-  protected readonly buttonFocusColor = 'white';
-  protected readonly buttonFocusBackground = 'blue';
+  protected readonly buttonFocusColor = 'black';
+  protected readonly buttonFocusBackground = 'white';
 
-  protected readonly buttonHoverColor = 'white';
-  protected readonly buttonHoverBackground = 'blue';
+  protected readonly buttonHoverColor = 'black';
+  protected readonly buttonHoverBackground = 'white';
+
+  protected setModalBoxWidth(modalBoxWidth: number) {
+    this.modalBoxWidth = modalBoxWidth;
+    this.modalWidth = this.modalBoxWidth - this.modalBoxPadding * 2
+    this.modalContentWidth = this.modalWidth - (this.modalPadding.left + this.modalPadding.right);
+  }
 
   protected setModalBoxHeight(modalBoxHeight: number) {
     this.modalBoxHeight = modalBoxHeight;
@@ -56,7 +75,8 @@ export class BaseModal {
   _modalBox: any;
   closeHandler: (data: any) => void;
 
-  constructor(protected screen: any, handlers: IBaseModalHandlers, modalBoxHeight?: number) {
+  constructor(protected screen: any, handlers: IBaseModalHandlers, modalBoxWidth?: number, modalBoxHeight?: number) {
+    if (modalBoxWidth) this.setModalBoxWidth(modalBoxWidth);
     if (modalBoxHeight) this.setModalBoxHeight(modalBoxHeight);
     this.closeHandler = handlers.closeHandler;
     this._modalBox = this.createModalBox();
@@ -99,33 +119,106 @@ export class BaseModal {
     });
   }
 
-  protected createTextBox(form: blessed.Widgets.Node, label: string, top: number) {
-    return blessed.textbox({
-      label: ` ${this.formatLabel(label)} `,
-      name: label,
+  protected createLog(
+    form: blessed.Widgets.Node,
+    label: string,
+    position: IElementPosition = { top: 1 },
+    size: IElementSize = { width: this.modalContentWidth, height: 3 }): any
+  {
+    return blessed.log({
       parent: form,
-      top: top,
+      label: label ? ` ${this.formatLabel(label)} ` : '',
+      interactive: false,
+      draggable: false,
+      padding: { top: 0, right: 1, bottom: 0, left: 1 },
+      // scrollbar: true,
+      scrollable: true,
+      keys: false,
+      vi: false,
       tags: true,
-      keys: true,
-      inputOnFocus: true,
+      mouse: false,
+      ...position,
+      ...size,
       border: { type: 'line' },
-      width: this.modalContentWidth,
-      height: 3,
       style: {
-        focus: { border: { fg: 'blue' } },
-        border: { fg: 'cyan' },
+        border: {
+          fg: 'black'
+        },
+        focus: {
+          fg: this.buttonFocusColor,
+        },
       }
     });
   }
 
-  protected createFormButton(form: blessed.Widgets.Node, label: string) {
+  protected createBox(
+    form: blessed.Widgets.Node,
+    label: string,
+    position: IElementPosition = { top: 1 },
+    size: IElementSize = { width: this.modalContentWidth, height: 3 }
+    ): blessed.Widgets.BoxElement
+  {
+    return blessed.box({
+      parent: form,
+      label: ` ${this.formatLabel(label)} `,
+      interactive: false,
+      // scrollbar: true,
+      scrollable: true,
+      keys: false,
+      vi: false,
+      mouse: false,
+      tags: true,
+      padding: 1,
+      ...position,
+      ...size,
+      border: { type: 'line' },
+      style: {
+        border: {
+          fg: 'black'
+        },
+        focus: {
+          fg: this.buttonFocusColor,
+        },
+      }
+    });
+  }
+
+  protected createTextBox(
+    form: blessed.Widgets.Node,
+    label: string,
+    position: IElementPosition = { top: 1 },
+    size: IElementSize = { width: this.modalContentWidth, height: 3 }): blessed.Widgets.TextboxElement
+  {
+    return blessed.textbox({
+      label: ` ${this.formatLabel(label)} `,
+      name: label,
+      parent: form,
+      ...position,
+      ...size,
+      tags: true,
+      keys: true,
+      inputOnFocus: true,
+      border: { type: 'line' },
+      style: {
+        focus: { border: { fg: 'white' } },
+        border: { fg: 'yellow' },
+      }
+    });
+  }
+
+  protected createFormButton(
+    form: blessed.Widgets.Node,
+    label: string,
+    position: IElementPosition = { bottom: 1 },
+    size: IElementSize = { width: this.modalContentWidth })
+  {
     return blessed.button({
       parent: form,
       mouse: true,
       keys: true,
       shrink: true,
-      width: this.modalContentWidth,
-      bottom: 1,
+      ...position,
+      ...size,
       name: label,
       content: label,
       padding: { left: 2, right: 2, top: 1, bottom: 1 },

@@ -1,6 +1,6 @@
 import * as blessed from 'blessed';
 
-import { BaseModal, IBaseModalHandlers } from './base-modal';
+import { BaseModal, IBaseModalHandlers, IElementPosition, IElementSize } from './base-modal';
 import { FuzzySearch } from '../../utils/fuzzy-search';
 
 
@@ -10,18 +10,19 @@ export interface ISearchModalHandlers extends IBaseModalHandlers {
 
 
 export class SearchModal extends BaseModal {
+  static readonly modalWidth = 50;
   static readonly modalHeight = 11;
 
   private _modalForm: blessed.Widgets.FormElement<unknown>;
   private _searchBox: blessed.Widgets.TextElement;
 
   constructor(screen: blessed.Widgets.Screen, { keypressHandler, closeHandler }: ISearchModalHandlers) {
-    super(screen, <IBaseModalHandlers>{ closeHandler }, SearchModal.modalHeight);
+    super(screen, <IBaseModalHandlers>{ closeHandler }, SearchModal.modalWidth, SearchModal.modalHeight);
 
     let fuzzySearch = new FuzzySearch();
 
     this._modalForm = this.createModalForm(this._modalBox);
-    this._searchBox = this.createTextBox(this._modalForm, 'Shopify Store', 0);
+    this._searchBox = this.createTextBox(this._modalForm, 'Shopify Store', <IElementPosition>{ top: 0 });
     this._searchBox.key('enter', () => {
       searchButton.focus();
       this.screen.render();
@@ -58,7 +59,7 @@ export class SearchModal extends BaseModal {
       }
     );
 
-    let searchButton = this.createFormButton(this._modalForm, 'SEARCH');
+    let searchButton = this.createFormButton(this._modalForm, 'SEARCH', <IElementPosition>{ bottom: 1, left: 0 }, <IElementSize>{ width: '50%-1' });
     searchButton.on('press', () => this.destroyModal({
       [this._searchBox.name]: this._searchBox.content,
     }));

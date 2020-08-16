@@ -126,12 +126,12 @@ export class FuzzySearch {
 
   constructor() { }
 
-  public search(searchTerm: string): Object {
+  public search(searchTerm: string): any {
     let results = Fuzzysort.go(searchTerm, this.sites, { key: 'name' });
     let matches = [];
 
     for (let result of results) {
-      let highlighted = Fuzzysort.highlight(Fuzzysort.single(searchTerm, result.target), '{red-fg}', '{/red-fg}');
+      let highlighted = Fuzzysort.highlight(Fuzzysort.single(searchTerm, result.target), '{blue-fg}', '{/blue-fg}');
       matches.push({
         website: highlighted,
         ...results[0].obj.shopify,

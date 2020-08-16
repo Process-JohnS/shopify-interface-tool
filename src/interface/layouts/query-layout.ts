@@ -1,3 +1,4 @@
+import { IStoreSelectModalHandlers } from './../modals/store-select-modal';
 import { ISearchModalHandlers } from './../modals/search-modal';
 import { MainInterfaceBuilder, GridPosition, TableColumnWidths } from '../builder';
 
@@ -48,7 +49,7 @@ export class QueryLayout {
 
 
     // Search Modal
-    this._uiBuilder.createSearchModal(['s'], <ISearchModalHandlers>{
+    this._uiBuilder.createSearchModal(['k'], <ISearchModalHandlers>{
 
       keypressHandler: (data) => {
         log1.setContent(``);
@@ -68,6 +69,25 @@ export class QueryLayout {
           log1.log(`${colors.red.bold('Error:')} Number Format Exception`);
           gauge1.setPercent(0);
         }
+      }
+
+    });
+
+
+
+    // Store Select Modal
+    this._uiBuilder.createStoreSelectModal(['s'], <IStoreSelectModalHandlers>{
+
+      keypressHandler: (data) => {
+        log1.setContent(``);
+        log1.setScroll(0);
+        log1.log(data);
+      },
+
+      closeHandler: (_) => {
+        log1.setContent(``);
+        log1.setScroll(0);
+        log1.log('Store select modal closed');
       }
 
     });

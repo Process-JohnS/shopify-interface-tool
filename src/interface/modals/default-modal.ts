@@ -1,6 +1,6 @@
 import * as blessed from 'blessed';
 
-import { BaseModal, IBaseModalHandlers } from './base-modal';
+import { BaseModal, IBaseModalHandlers, IElementPosition, IElementSize } from './base-modal';
 
 
 export interface IDefaultModalHandlers extends IBaseModalHandlers {
@@ -15,9 +15,10 @@ export class DefaultModal extends BaseModal {
     super(screen, <IBaseModalHandlers>{ closeHandler }, DefaultModal.modalHeight);
 
     let modalForm = this.createModalForm(this._modalBox);
-    let textBox1 = this.createTextBox(modalForm, 'Username', 0);
-    let textBox2 = this.createTextBox(modalForm, 'Password', 4);
-    let submitButton = this.createFormButton(modalForm, 'SUBMIT');
+    let textBox1 = this.createTextBox(modalForm, 'Username', <IElementPosition>{ top: 0 });
+    let textBox2 = this.createTextBox(modalForm, 'Password', <IElementPosition>{ top: 4 });
+    let submitButton = this.createFormButton(modalForm, 'SUBMIT', <IElementPosition>{ bottom: 1, left: 0 }, <IElementSize>{ width: '50%-1' });
+    let cancelButton = this.createFormButton(modalForm, 'CANCEL', <IElementPosition>{ bottom: 1, right: 0 }, <IElementSize>{ width: '50%-1' });
 
     submitButton.on('press', () => this.destroyModal({
       [textBox1.name]: textBox1.content,
