@@ -1,0 +1,19 @@
+{
+  "name": "typescript-template",
+  "version": "1.0.0",
+  "dependencies": {
+    "@types/blessed": "^0.1.17",
+    "@types/colors": "^1.2.1",
+    "@types/node": "^14.0.27",
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.8.20",
+    "colors": "^1.4.0",
+    "fuzzysort": "^1.1.4",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "scripts": {
+    "start": "node --max-old-space-size=4096 -r ts-node/register src",
+    "build": "tsc -p ."
+  }
+}
