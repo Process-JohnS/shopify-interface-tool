@@ -36,14 +36,14 @@ export class StoreSelectModal extends BaseModal {
       this._modalForm,
       undefined,
       <IElementPosition>{ top: 3 },
-      <IElementSize>{ height: 6 }
+      <IElementSize>{ height: 3 }
     );
 
     this._infoBox = this.createBox(
       this._modalForm,
       'Info',
       <IElementPosition>{ bottom: 5 },
-      <IElementSize>{ height: 13 }
+      <IElementSize>{ height: 16 }
     );
 
     let searchButton = this.createFormButton(this._modalForm, 'SEARCH',
