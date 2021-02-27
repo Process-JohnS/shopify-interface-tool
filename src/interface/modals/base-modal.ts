@@ -90,6 +90,7 @@ export class BaseModal {
 
   protected createModalBox() {
     return blessed.layout({
+      shadow: true,
       draggable: true,
       layout: 'inline',
       parent: this.screen,
